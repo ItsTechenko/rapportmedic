@@ -18,6 +18,7 @@
     --ems-line: #1A1A1A;
     --ems-muted: #8A8A8A;
     --ems-warning: #E8B923;
+    --ems-blue: #1B5E9C;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -61,12 +62,13 @@
   }
 
   /* === LOGIN SCREEN === */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
   .login-screen {
     padding: 60px 50px;
     text-align: center;
   }
-
-  .login-screen.hidden { display: none; }
 
   .login-header {
     border-bottom: 2px solid var(--ems-ink);
@@ -182,10 +184,136 @@
     text-transform: uppercase;
   }
 
-  /* === FORM SCREEN === */
-  .form-screen { display: none; }
-  .form-screen.active { display: block; }
+  /* === MENU DE SÉLECTION === */
+  .menu-screen {
+    padding: 60px 50px;
+  }
 
+  .menu-header {
+    text-align: center;
+    border-bottom: 2px solid var(--ems-ink);
+    padding-bottom: 30px;
+    margin-bottom: 50px;
+  }
+
+  .menu-header h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .menu-header p {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--ems-muted);
+    text-transform: uppercase;
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+  }
+
+  .menu-card {
+    background: var(--ems-paper);
+    border: 2px solid var(--ems-ink);
+    box-shadow: 8px 8px 0 var(--ems-ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .menu-card:hover {
+    transform: translate(-4px, -4px);
+    box-shadow: 12px 12px 0 var(--ems-red);
+  }
+
+  .menu-card-image {
+    height: 200px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* === ILLUSTRATION BOBOLOGIE === */
+  .bobologie-bg {
+    background: linear-gradient(135deg, #FFE5B4 0%, #FFB6A3 100%);
+  }
+
+  .bobologie-svg {
+    width: 140px;
+    height: 140px;
+  }
+
+  /* === ILLUSTRATION RAPPORT === */
+  .rapport-bg {
+    background: linear-gradient(135deg, #2A2A2A 0%, #C8102E 100%);
+  }
+
+  .rapport-svg {
+    width: 140px;
+    height: 140px;
+  }
+
+  .menu-card-body {
+    padding: 25px;
+    border-top: 2px solid var(--ems-ink);
+  }
+
+  .menu-card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+
+  .menu-card-desc {
+    font-size: 11px;
+    letter-spacing: 1px;
+    color: var(--ems-muted);
+    line-height: 1.6;
+    text-transform: uppercase;
+    margin-bottom: 15px;
+  }
+
+  .menu-card-cta {
+    display: inline-block;
+    background: var(--ems-ink);
+    color: var(--ems-paper);
+    padding: 8px 16px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .menu-card:hover .menu-card-cta {
+    background: var(--ems-red);
+  }
+
+  .menu-card-tag {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: var(--ems-ink);
+    color: var(--ems-paper);
+    padding: 4px 10px;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    z-index: 2;
+  }
+
+  .menu-card-tag.fast { background: #1B7A3E; }
+  .menu-card-tag.full { background: var(--ems-red); }
+
+  /* === FORM SCREEN === */
   .form-header {
     background: var(--ems-ink);
     color: var(--ems-paper);
@@ -195,6 +323,10 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 15px;
+  }
+
+  .form-header.bobologie {
+    background: linear-gradient(135deg, #2A2A2A 0%, #4A2A1A 100%);
   }
 
   .form-header-left h1 {
@@ -220,12 +352,35 @@
 
   .form-id strong { color: var(--ems-red); }
 
+  .back-btn {
+    background: transparent;
+    color: var(--ems-paper);
+    border: 1px solid var(--ems-paper);
+    padding: 8px 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    cursor: pointer;
+    text-transform: uppercase;
+    margin-top: 8px;
+    transition: all 0.15s;
+  }
+
+  .back-btn:hover {
+    background: var(--ems-paper);
+    color: var(--ems-ink);
+  }
+
   .form-body { padding: 40px 50px; }
 
   .section {
     margin-bottom: 35px;
     border-left: 3px solid var(--ems-red);
     padding-left: 20px;
+  }
+
+  .form-header.bobologie ~ form .section {
+    border-left-color: #E8893B;
   }
 
   .section-title {
@@ -243,6 +398,10 @@
     color: var(--ems-red);
     font-family: 'JetBrains Mono', monospace;
     font-weight: 700;
+  }
+
+  .form-header.bobologie ~ form .section-number {
+    color: #E8893B;
   }
 
   .field-grid {
@@ -332,6 +491,10 @@
     cursor: pointer;
     transition: all 0.15s;
     box-shadow: 5px 5px 0 var(--ems-ink);
+  }
+
+  .submit-btn.bobologie {
+    background: #E8893B;
   }
 
   .submit-btn:hover:not(:disabled) {
@@ -430,19 +593,22 @@
   @media (max-width: 640px) {
     body { padding: 20px 10px; }
     .container { box-shadow: 6px 6px 0 var(--ems-ink); }
-    .login-screen, .form-body { padding: 30px 20px; }
+    .login-screen, .menu-screen, .form-body { padding: 30px 20px; }
     .form-header, .submit-zone, .footer-meta { padding: 20px; }
     .field-grid { grid-template-columns: 1fr; }
-    .login-title { font-size: 32px; }
+    .login-title, .menu-header h1 { font-size: 32px; }
     .form-header-left h1 { font-size: 26px; }
+    .menu-grid { grid-template-columns: 1fr; gap: 20px; }
+    .menu-card-image { height: 160px; }
+    .menu-card-title { font-size: 24px; }
   }
 </style>
 </head>
 <body>
 
 <!-- ============ ECRAN DE CONNEXION ============ -->
-<div class="container" id="loginContainer">
-  <div class="login-screen" id="loginScreen">
+<div class="container screen active" id="loginScreen">
+  <div class="login-screen">
     <div class="login-header">
       <div class="ems-cross"></div>
       <h1 class="login-title">EMS // ACCÈS RESTREINT</h1>
@@ -467,12 +633,196 @@
   </div>
 </div>
 
-<!-- ============ FORMULAIRE DE RAPPORT ============ -->
-<div class="container form-screen" id="formScreen">
+<!-- ============ MENU DE SÉLECTION ============ -->
+<div class="container screen" id="menuScreen">
+  <div class="menu-screen">
+    <div class="menu-header">
+      <h1>SÉLECTION DU RAPPORT</h1>
+      <p>Choisis le type d'intervention à documenter</p>
+    </div>
+
+    <div class="menu-grid">
+
+      <!-- CARTE BOBOLOGIE -->
+      <div class="menu-card" onclick="openForm('bobologie')">
+        <span class="menu-card-tag fast">RAPIDE · 1 MIN</span>
+        <div class="menu-card-image bobologie-bg">
+          <svg class="bobologie-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pansement croisé -->
+            <g transform="rotate(-30 50 50)">
+              <rect x="20" y="42" width="60" height="16" rx="8" fill="#FBFAF6" stroke="#2A2A2A" stroke-width="2.5"/>
+              <rect x="30" y="42" width="40" height="16" fill="#F0D5B0" stroke="#2A2A2A" stroke-width="2.5"/>
+              <circle cx="38" cy="50" r="1.8" fill="#2A2A2A"/>
+              <circle cx="44" cy="50" r="1.8" fill="#2A2A2A"/>
+              <circle cx="50" cy="50" r="1.8" fill="#2A2A2A"/>
+              <circle cx="56" cy="50" r="1.8" fill="#2A2A2A"/>
+              <circle cx="62" cy="50" r="1.8" fill="#2A2A2A"/>
+            </g>
+            <g transform="rotate(60 50 50)">
+              <rect x="20" y="42" width="60" height="16" rx="8" fill="#FBFAF6" stroke="#2A2A2A" stroke-width="2.5"/>
+              <rect x="30" y="42" width="40" height="16" fill="#F0D5B0" stroke="#2A2A2A" stroke-width="2.5"/>
+              <circle cx="38" cy="50" r="1.8" fill="#2A2A2A"/>
+              <circle cx="44" cy="50" r="1.8" fill="#2A2A2A"/>
+              <circle cx="50" cy="50" r="1.8" fill="#2A2A2A"/>
+              <circle cx="56" cy="50" r="1.8" fill="#2A2A2A"/>
+              <circle cx="62" cy="50" r="1.8" fill="#2A2A2A"/>
+            </g>
+          </svg>
+        </div>
+        <div class="menu-card-body">
+          <h2 class="menu-card-title">BOBOLOGIE</h2>
+          <p class="menu-card-desc">Blessures légères · Soins rapides<br>Éraflures, contusions, petites coupures</p>
+          <span class="menu-card-cta">› ACCÉDER</span>
+        </div>
+      </div>
+
+      <!-- CARTE RAPPORT COMPLET -->
+      <div class="menu-card" onclick="openForm('complet')">
+        <span class="menu-card-tag full">COMPLET · 5 MIN</span>
+        <div class="menu-card-image rapport-bg">
+          <svg class="rapport-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Clipboard avec rapport -->
+            <rect x="22" y="18" width="56" height="68" rx="2" fill="#FBFAF6" stroke="#0A0A0A" stroke-width="2.5"/>
+            <rect x="36" y="12" width="28" height="12" rx="2" fill="#C8102E" stroke="#0A0A0A" stroke-width="2.5"/>
+            <!-- Croix médicale -->
+            <rect x="44" y="30" width="12" height="12" fill="#C8102E"/>
+            <rect x="46" y="32" width="8" height="2" fill="#FBFAF6"/>
+            <rect x="46" y="36" width="8" height="2" fill="#FBFAF6"/>
+            <rect x="49" y="29" width="2" height="14" fill="#FBFAF6"/>
+            <rect x="47" y="31" width="6" height="10" fill="none"/>
+            <path d="M 49 31 L 49 41 M 45 36 L 53 36" stroke="#FBFAF6" stroke-width="2"/>
+            <!-- Lignes de texte -->
+            <line x1="30" y1="50" x2="70" y2="50" stroke="#2A2A2A" stroke-width="1.5"/>
+            <line x1="30" y1="56" x2="65" y2="56" stroke="#2A2A2A" stroke-width="1.5"/>
+            <line x1="30" y1="62" x2="70" y2="62" stroke="#2A2A2A" stroke-width="1.5"/>
+            <line x1="30" y1="68" x2="60" y2="68" stroke="#2A2A2A" stroke-width="1.5"/>
+            <line x1="30" y1="74" x2="68" y2="74" stroke="#2A2A2A" stroke-width="1.5"/>
+          </svg>
+        </div>
+        <div class="menu-card-body">
+          <h2 class="menu-card-title">RAPPORT MÉDICAL</h2>
+          <p class="menu-card-desc">Intervention complète · 7 sections<br>Accidents graves, hospitalisations</p>
+          <span class="menu-card-cta">› ACCÉDER</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ FORMULAIRE BOBOLOGIE (SIMPLIFIÉ) ============ -->
+<div class="container screen" id="bobologieScreen">
+  <div class="form-header bobologie">
+    <div class="form-header-left">
+      <h1>Rapport Bobologie</h1>
+      <p>Soins légers · Intervention rapide</p>
+      <button class="back-btn" onclick="backToMenu()">‹ RETOUR AU MENU</button>
+    </div>
+    <div class="form-id">
+      <div>RÉF: <strong id="boboRefId">BOBO-XXXX</strong></div>
+      <div id="boboDate">--/--/----</div>
+    </div>
+  </div>
+
+  <form id="bobologieForm">
+    <div class="form-body">
+
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[01]</span>PATIENT & INTERVENANT
+        </h2>
+        <div class="field-grid">
+          <div class="field">
+            <label>Nom du patient</label>
+            <input type="text" name="patient_nom" required placeholder="Nom et prénom">
+          </div>
+          <div class="field">
+            <label>EMS intervenant</label>
+            <input type="text" name="ems_nom" required placeholder="Votre nom RP">
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[02]</span>NATURE DU BOBO
+        </h2>
+        <div class="field-grid">
+          <div class="field">
+            <label>Type de blessure</label>
+            <select name="type_bobo" required>
+              <option value="">— Sélectionner —</option>
+              <option>Éraflure</option>
+              <option>Petite coupure</option>
+              <option>Contusion / Bleu</option>
+              <option>Brûlure légère</option>
+              <option>Entorse mineure</option>
+              <option>Saignement de nez</option>
+              <option>Mal de tête / Migraine</option>
+              <option>Crise d'angoisse légère</option>
+              <option>Autre</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Localisation</label>
+            <input type="text" name="localisation" required placeholder="Ex: Bras gauche, genou...">
+          </div>
+          <div class="field field-full">
+            <label>Description rapide</label>
+            <textarea name="description" required placeholder="Quelques mots sur ce qui s'est passé..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[03]</span>SOINS & FACTURATION
+        </h2>
+        <div class="field-grid">
+          <div class="field field-full">
+            <label>Soins prodigués</label>
+            <textarea name="soins" required placeholder="Désinfection, pansement, antalgique..."></textarea>
+          </div>
+          <div class="field">
+            <label>Montant ($)</label>
+            <input type="number" name="montant" required min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Paiement</label>
+            <select name="paiement" required>
+              <option value="">— Sélectionner —</option>
+              <option>Carte bancaire</option>
+              <option>Espèces</option>
+              <option>Assurance santé</option>
+              <option>Gratuit / Offert</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="submit-zone">
+      <div class="submit-info">
+        › Rapport bobologie · Transmission au registre EMS
+      </div>
+      <button type="submit" class="submit-btn bobologie" id="boboSubmitBtn">› TRANSMETTRE</button>
+    </div>
+  </form>
+
+  <div class="footer-meta">
+    <span>EMS // BOBOLOGIE</span>
+    <span>v1.0 · CONFIDENTIEL</span>
+  </div>
+</div>
+
+<!-- ============ FORMULAIRE RAPPORT COMPLET ============ -->
+<div class="container screen" id="completScreen">
   <div class="form-header">
     <div class="form-header-left">
       <h1>Rapport d'Intervention</h1>
       <p>Document médical officiel · Service EMS</p>
+      <button class="back-btn" onclick="backToMenu()">‹ RETOUR AU MENU</button>
     </div>
     <div class="form-id">
       <div>RÉF: <strong id="refId">EMS-XXXX</strong></div>
@@ -483,7 +833,6 @@
   <form id="reportForm">
     <div class="form-body">
 
-      <!-- SECTION 1 : IDENTITÉ -->
       <div class="section">
         <h2 class="section-title">
           <span class="section-number">[01]</span>IDENTIFICATION
@@ -508,7 +857,6 @@
         </div>
       </div>
 
-      <!-- SECTION 2 : CIRCONSTANCES -->
       <div class="section">
         <h2 class="section-title">
           <span class="section-number">[02]</span>CIRCONSTANCES DE L'ACCIDENT
@@ -521,7 +869,6 @@
         </div>
       </div>
 
-      <!-- SECTION 3 : DIAGNOSTIC -->
       <div class="section">
         <h2 class="section-title">
           <span class="section-number">[03]</span>DIAGNOSTIC & BLESSURES
@@ -534,7 +881,6 @@
         </div>
       </div>
 
-      <!-- SECTION 4 : SOINS -->
       <div class="section">
         <h2 class="section-title">
           <span class="section-number">[04]</span>SOINS PRODIGUÉS
@@ -547,7 +893,6 @@
         </div>
       </div>
 
-      <!-- SECTION 5 : TRAITEMENT -->
       <div class="section">
         <h2 class="section-title">
           <span class="section-number">[05]</span>TRAITEMENT & RÉCUPÉRATION
@@ -576,7 +921,6 @@
         </div>
       </div>
 
-      <!-- SECTION 6 : OBSERVATIONS -->
       <div class="section">
         <h2 class="section-title">
           <span class="section-number">[06]</span>OBSERVATIONS & CONSEILS
@@ -589,7 +933,6 @@
         </div>
       </div>
 
-      <!-- SECTION 7 : FACTURATION -->
       <div class="section">
         <h2 class="section-title">
           <span class="section-number">[07]</span>FACTURATION
@@ -649,36 +992,41 @@
   // ============================================
   const CONFIG = {
     // Code d'accès EMS (à partager en interne sur Discord privé)
-    // Tu peux le changer quand tu veux, et même mettre plusieurs codes valides
     ACCESS_CODES: ['EMS2026', 'AMBULANCE'],
 
     // URL du webhook Discord (créé dans : Paramètres salon > Intégrations > Webhooks)
-    WEBHOOK_URL: 'https://discord.com/api/webhooks/1508748771557642321/L_Oxal_8MPPqwXC21kM7Upd5ZASDvduSG7vc-Ck525UlrN9BFvyURG9ouzYiCol0n6E4',
+    // Tu peux mettre le MÊME webhook pour les deux, ou DIFFÉRENTS pour séparer les channels
+    WEBHOOK_URL_COMPLET: 'https://discord.com/api/webhooks/REMPLACE_ICI/PAR_TON_WEBHOOK',
+    WEBHOOK_URL_BOBOLOGIE: 'https://discord.com/api/webhooks/REMPLACE_ICI/PAR_TON_WEBHOOK',
 
-    // Nom du serveur RP (apparaît dans l'embed)
+    // Nom du serveur RP
     SERVER_NAME: 'Los Santos RP',
   };
   // ============================================
 
-  // --- Génération ID rapport + date ---
-  function generateRefId() {
-    const num = Math.floor(1000 + Math.random() * 9000);
-    return 'EMS-' + num;
-  }
+  // --- Helpers ---
+  function pad(n) { return String(n).padStart(2, '0'); }
   function formatDate(date) {
-    const pad = n => String(n).padStart(2, '0');
     return `${pad(date.getDate())}/${pad(date.getMonth()+1)}/${date.getFullYear()} · ${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
+  function generateRefId(prefix) {
+    return prefix + '-' + Math.floor(1000 + Math.random() * 9000);
+  }
 
-  // --- Système d'accès ---
+  // --- Navigation entre écrans ---
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
   function checkAccess() {
     const input = document.getElementById('accessCode').value.trim().toUpperCase();
     const errorEl = document.getElementById('accessError');
 
     if (CONFIG.ACCESS_CODES.map(c => c.toUpperCase()).includes(input)) {
-      // Mémorise l'accès pour la session
       sessionStorage.setItem('ems_authed', '1');
-      showForm();
+      showScreen('menuScreen');
     } else {
       errorEl.textContent = '✗ CODE INVALIDE — ACCÈS REFUSÉ';
       document.getElementById('accessCode').value = '';
@@ -686,24 +1034,33 @@
     }
   }
 
-  function showForm() {
-    document.getElementById('loginContainer').style.display = 'none';
-    document.getElementById('formScreen').classList.add('active');
-    document.getElementById('refId').textContent = generateRefId();
-    document.getElementById('currentDate').textContent = formatDate(new Date());
+  function openForm(type) {
+    if (type === 'bobologie') {
+      document.getElementById('boboRefId').textContent = generateRefId('BOBO');
+      document.getElementById('boboDate').textContent = formatDate(new Date());
+      showScreen('bobologieScreen');
+    } else {
+      document.getElementById('refId').textContent = generateRefId('EMS');
+      document.getElementById('currentDate').textContent = formatDate(new Date());
+      showScreen('completScreen');
+    }
   }
 
-  // Vérifie si déjà authentifié dans cette session
+  function backToMenu() {
+    showScreen('menuScreen');
+  }
+
+  // Vérifie si déjà authentifié
   if (sessionStorage.getItem('ems_authed') === '1') {
-    showForm();
+    showScreen('menuScreen');
   }
 
-  // Entrée = valider
+  // Entrée = valider login
   document.getElementById('accessCode').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') checkAccess();
   });
 
-  // --- Envoi du rapport au webhook Discord ---
+  // --- ENVOI : RAPPORT COMPLET ---
   document.getElementById('reportForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -716,77 +1073,30 @@
     const refId = document.getElementById('refId').textContent;
     const dateStr = document.getElementById('currentDate').textContent;
 
-    // Construction de l'embed Discord (mise en forme propre)
     const embed = {
       title: `🚑 RAPPORT MÉDICAL — ${refId}`,
-      color: 0xC8102E, // Rouge EMS
+      color: 0xC8102E,
       description: `**Service EMS · ${CONFIG.SERVER_NAME}**\n*Document confidentiel — Usage interne*`,
       fields: [
-        {
-          name: '👤 PATIENT',
-          value: `**Nom :** ${data.patient_nom}\n**Âge / Sexe :** ${data.patient_age}`,
-          inline: true,
-        },
-        {
-          name: '🏥 INTERVENANT',
-          value: `**EMS :** ${data.ems_nom}\n**Matricule :** ${data.ems_matricule}`,
-          inline: true,
-        },
-        {
-          name: '\u200b', value: '\u200b', inline: false, // espacement
-        },
-        {
-          name: '📍 [01] CIRCONSTANCES',
-          value: data.circonstances.substring(0, 1024),
-          inline: false,
-        },
-        {
-          name: '🩹 [02] DIAGNOSTIC',
-          value: data.diagnostic.substring(0, 1024),
-          inline: false,
-        },
-        {
-          name: '💉 [03] SOINS PRODIGUÉS',
-          value: data.soins.substring(0, 1024),
-          inline: false,
-        },
-        {
-          name: '💊 [04] TRAITEMENT',
-          value: data.traitement.substring(0, 1024),
-          inline: false,
-        },
-        {
-          name: '⏱️ CONVALESCENCE',
-          value: data.convalescence,
-          inline: true,
-        },
-        {
-          name: '📋 ÉTAT DE SORTIE',
-          value: data.etat_sortie,
-          inline: true,
-        },
-        {
-          name: '\u200b', value: '\u200b', inline: false,
-        },
-        {
-          name: '📝 [05] OBSERVATIONS & CONSEILS',
-          value: data.observations.substring(0, 1024),
-          inline: false,
-        },
-        {
-          name: '💰 FACTURATION',
-          value: `**Montant :** $${data.montant}\n**Paiement :** ${data.paiement}${data.detail_facture ? '\n**Détail :** ' + data.detail_facture.substring(0, 800) : ''}`,
-          inline: false,
-        },
+        { name: '👤 PATIENT', value: `**Nom :** ${data.patient_nom}\n**Âge / Sexe :** ${data.patient_age}`, inline: true },
+        { name: '🏥 INTERVENANT', value: `**EMS :** ${data.ems_nom}\n**Matricule :** ${data.ems_matricule}`, inline: true },
+        { name: '\u200b', value: '\u200b', inline: false },
+        { name: '📍 [01] CIRCONSTANCES', value: data.circonstances.substring(0, 1024), inline: false },
+        { name: '🩹 [02] DIAGNOSTIC', value: data.diagnostic.substring(0, 1024), inline: false },
+        { name: '💉 [03] SOINS PRODIGUÉS', value: data.soins.substring(0, 1024), inline: false },
+        { name: '💊 [04] TRAITEMENT', value: data.traitement.substring(0, 1024), inline: false },
+        { name: '⏱️ CONVALESCENCE', value: data.convalescence, inline: true },
+        { name: '📋 ÉTAT DE SORTIE', value: data.etat_sortie, inline: true },
+        { name: '\u200b', value: '\u200b', inline: false },
+        { name: '📝 [05] OBSERVATIONS & CONSEILS', value: data.observations.substring(0, 1024), inline: false },
+        { name: '💰 FACTURATION', value: `**Montant :** $${data.montant}\n**Paiement :** ${data.paiement}${data.detail_facture ? '\n**Détail :** ' + data.detail_facture.substring(0, 800) : ''}`, inline: false },
       ],
-      footer: {
-        text: `EMS Internal Report · ${dateStr}`,
-      },
+      footer: { text: `EMS Internal Report · ${dateStr}` },
       timestamp: new Date().toISOString(),
     };
 
     try {
-      const response = await fetch(CONFIG.WEBHOOK_URL, {
+      const response = await fetch(CONFIG.WEBHOOK_URL_COMPLET, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -798,8 +1108,7 @@
       if (response.ok || response.status === 204) {
         showStatus(true);
         e.target.reset();
-        // Régénère un nouveau numéro pour le prochain rapport
-        document.getElementById('refId').textContent = generateRefId();
+        document.getElementById('refId').textContent = generateRefId('EMS');
         document.getElementById('currentDate').textContent = formatDate(new Date());
       } else {
         throw new Error('HTTP ' + response.status);
@@ -813,7 +1122,65 @@
     }
   });
 
-  // --- Affichage du statut (succès / erreur) ---
+  // --- ENVOI : BOBOLOGIE ---
+  document.getElementById('bobologieForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const btn = document.getElementById('boboSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = '› TRANSMISSION...';
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    const refId = document.getElementById('boboRefId').textContent;
+    const dateStr = document.getElementById('boboDate').textContent;
+
+    const embed = {
+      title: `🩹 BOBOLOGIE — ${refId}`,
+      color: 0xE8893B, // Orange/peau
+      description: `**Soins légers · ${CONFIG.SERVER_NAME}**`,
+      fields: [
+        { name: '👤 Patient', value: data.patient_nom, inline: true },
+        { name: '🏥 EMS', value: data.ems_nom, inline: true },
+        { name: '\u200b', value: '\u200b', inline: false },
+        { name: '🩹 Type de bobo', value: data.type_bobo, inline: true },
+        { name: '📍 Localisation', value: data.localisation, inline: true },
+        { name: '📝 Description', value: data.description.substring(0, 1024), inline: false },
+        { name: '💊 Soins prodigués', value: data.soins.substring(0, 1024), inline: false },
+        { name: '💰 Facturation', value: `**Montant :** $${data.montant}\n**Paiement :** ${data.paiement}`, inline: false },
+      ],
+      footer: { text: `Rapport Bobologie · ${dateStr}` },
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      const response = await fetch(CONFIG.WEBHOOK_URL_BOBOLOGIE, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'Registre EMS · Bobologie',
+          embeds: [embed],
+        }),
+      });
+
+      if (response.ok || response.status === 204) {
+        showStatus(true);
+        e.target.reset();
+        document.getElementById('boboRefId').textContent = generateRefId('BOBO');
+        document.getElementById('boboDate').textContent = formatDate(new Date());
+      } else {
+        throw new Error('HTTP ' + response.status);
+      }
+    } catch (err) {
+      console.error('Erreur webhook:', err);
+      showStatus(false, err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '› TRANSMETTRE';
+    }
+  });
+
+  // --- Status ---
   function showStatus(success, errorMsg = '') {
     const overlay = document.getElementById('statusOverlay');
     const icon = document.getElementById('statusIcon');
