@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMS // Rapport d'Intervention Médicale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ems-red: #C8102E;
+    --ems-red-dark: #8B0A1F;
+    --ems-bg: #F4F1EA;
+    --ems-paper: #FBFAF6;
+    --ems-ink: #0A0A0A;
+    --ems-ink-soft: #2A2A2A;
+    --ems-line: #1A1A1A;
+    --ems-muted: #8A8A8A;
+    --ems-warning: #E8B923;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--ems-bg);
+    color: var(--ems-ink);
+    min-height: 100vh;
+    background-image:
+      linear-gradient(rgba(10,10,10,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(10,10,10,0.04) 1px, transparent 1px);
+    background-size: 24px 24px;
+    padding: 40px 20px;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 8px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--ems-red) 0,
+      var(--ems-red) 30px,
+      var(--ems-ink) 30px,
+      var(--ems-ink) 60px
+    );
+    z-index: 100;
+  }
+
+  .container {
+    max-width: 880px;
+    margin: 20px auto;
+    background: var(--ems-paper);
+    border: 2px solid var(--ems-line);
+    box-shadow: 12px 12px 0 var(--ems-ink);
+    position: relative;
+  }
+
+  /* === LOGIN SCREEN === */
+  .login-screen {
+    padding: 60px 50px;
+    text-align: center;
+  }
+
+  .login-screen.hidden { display: none; }
+
+  .login-header {
+    border-bottom: 2px solid var(--ems-ink);
+    padding-bottom: 30px;
+    margin-bottom: 40px;
+  }
+
+  .ems-cross {
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 20px;
+    position: relative;
+    background: var(--ems-red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ems-cross::before, .ems-cross::after {
+    content: '';
+    position: absolute;
+    background: var(--ems-paper);
+  }
+  .ems-cross::before { width: 60%; height: 14px; }
+  .ems-cross::after { width: 14px; height: 60%; }
+
+  .login-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px;
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .login-subtitle {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--ems-muted);
+    text-transform: uppercase;
+  }
+
+  .security-badge {
+    display: inline-block;
+    background: var(--ems-ink);
+    color: var(--ems-paper);
+    padding: 6px 14px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+  }
+
+  .access-form {
+    max-width: 380px;
+    margin: 0 auto;
+  }
+
+  .access-label {
+    display: block;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    color: var(--ems-ink-soft);
+  }
+
+  .access-input {
+    width: 100%;
+    padding: 16px 18px;
+    border: 2px solid var(--ems-line);
+    background: var(--ems-paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    letter-spacing: 4px;
+    text-align: center;
+    text-transform: uppercase;
+    color: var(--ems-ink);
+  }
+
+  .access-input:focus {
+    outline: none;
+    border-color: var(--ems-red);
+    box-shadow: 4px 4px 0 var(--ems-red);
+  }
+
+  .access-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 18px;
+    background: var(--ems-ink);
+    color: var(--ems-paper);
+    border: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .access-button:hover {
+    background: var(--ems-red);
+    transform: translate(-3px, -3px);
+    box-shadow: 5px 5px 0 var(--ems-ink);
+  }
+
+  .access-error {
+    margin-top: 15px;
+    color: var(--ems-red);
+    font-size: 12px;
+    letter-spacing: 1px;
+    height: 16px;
+    text-transform: uppercase;
+  }
+
+  /* === FORM SCREEN === */
+  .form-screen { display: none; }
+  .form-screen.active { display: block; }
+
+  .form-header {
+    background: var(--ems-ink);
+    color: var(--ems-paper);
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .form-header-left h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 3px;
+    line-height: 1;
+  }
+
+  .form-header-left p {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--ems-muted);
+    margin-top: 6px;
+  }
+
+  .form-id {
+    text-align: right;
+    font-size: 11px;
+    letter-spacing: 1px;
+    line-height: 1.6;
+  }
+
+  .form-id strong { color: var(--ems-red); }
+
+  .form-body { padding: 40px 50px; }
+
+  .section {
+    margin-bottom: 35px;
+    border-left: 3px solid var(--ems-red);
+    padding-left: 20px;
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 3px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  .section-number {
+    font-size: 12px;
+    color: var(--ems-red);
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+  }
+
+  .field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .field-full { grid-column: 1 / -1; }
+
+  .field label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: var(--ems-ink-soft);
+    font-weight: 500;
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--ems-line);
+    background: var(--ems-paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--ems-ink);
+    transition: all 0.15s;
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--ems-red);
+    background: #fff;
+    box-shadow: 3px 3px 0 var(--ems-red);
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 80px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .field select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230A0A0A' stroke-width='2'%3e%3cpath d='M6 9l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 36px;
+  }
+
+  .submit-zone {
+    background: var(--ems-bg);
+    padding: 30px 50px;
+    border-top: 2px dashed var(--ems-line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .submit-info {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: var(--ems-muted);
+    text-transform: uppercase;
+    max-width: 350px;
+    line-height: 1.6;
+  }
+
+  .submit-btn {
+    background: var(--ems-red);
+    color: var(--ems-paper);
+    border: 2px solid var(--ems-ink);
+    padding: 18px 40px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 5px 5px 0 var(--ems-ink);
+  }
+
+  .submit-btn:hover:not(:disabled) {
+    transform: translate(-3px, -3px);
+    box-shadow: 8px 8px 0 var(--ems-ink);
+  }
+
+  .submit-btn:disabled {
+    background: var(--ems-muted);
+    cursor: not-allowed;
+    box-shadow: 3px 3px 0 var(--ems-ink);
+  }
+
+  /* === STATUS MESSAGES === */
+  .status-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10,10,10,0.85);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .status-overlay.show { display: flex; }
+
+  .status-box {
+    background: var(--ems-paper);
+    border: 2px solid var(--ems-ink);
+    box-shadow: 12px 12px 0 var(--ems-red);
+    padding: 50px 40px;
+    max-width: 480px;
+    text-align: center;
+    animation: slideIn 0.3s ease-out;
+  }
+
+  @keyframes slideIn {
+    from { transform: translate(-20px, -20px); opacity: 0; }
+    to { transform: translate(0, 0); opacity: 1; }
+  }
+
+  .status-icon {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 64px;
+    line-height: 1;
+    margin-bottom: 16px;
+  }
+
+  .status-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 3px;
+    margin-bottom: 12px;
+  }
+
+  .status-text {
+    font-size: 12px;
+    letter-spacing: 1px;
+    line-height: 1.7;
+    color: var(--ems-ink-soft);
+    margin-bottom: 25px;
+  }
+
+  .status-btn {
+    background: var(--ems-ink);
+    color: var(--ems-paper);
+    border: none;
+    padding: 14px 30px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    cursor: pointer;
+  }
+
+  .status-btn:hover { background: var(--ems-red); }
+
+  .success-icon { color: #1B7A3E; }
+  .error-icon { color: var(--ems-red); }
+
+  /* === FOOTER === */
+  .footer-meta {
+    padding: 20px 50px;
+    background: var(--ems-ink);
+    color: var(--ems-muted);
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* === RESPONSIVE === */
+  @media (max-width: 640px) {
+    body { padding: 20px 10px; }
+    .container { box-shadow: 6px 6px 0 var(--ems-ink); }
+    .login-screen, .form-body { padding: 30px 20px; }
+    .form-header, .submit-zone, .footer-meta { padding: 20px; }
+    .field-grid { grid-template-columns: 1fr; }
+    .login-title { font-size: 32px; }
+    .form-header-left h1 { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ ECRAN DE CONNEXION ============ -->
+<div class="container" id="loginContainer">
+  <div class="login-screen" id="loginScreen">
+    <div class="login-header">
+      <div class="ems-cross"></div>
+      <h1 class="login-title">EMS // ACCÈS RESTREINT</h1>
+      <p class="login-subtitle">Emergency Medical Services · Authentification requise</p>
+    </div>
+
+    <div class="security-badge">⚠ ZONE PROTÉGÉE · PERSONNEL AUTORISÉ</div>
+
+    <div class="access-form">
+      <label class="access-label">› Code d'accès EMS</label>
+      <input
+        type="password"
+        id="accessCode"
+        class="access-input"
+        placeholder="••••••"
+        autocomplete="off"
+        maxlength="32"
+      >
+      <button class="access-button" onclick="checkAccess()">› VALIDER L'ACCÈS</button>
+      <div class="access-error" id="accessError"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FORMULAIRE DE RAPPORT ============ -->
+<div class="container form-screen" id="formScreen">
+  <div class="form-header">
+    <div class="form-header-left">
+      <h1>Rapport d'Intervention</h1>
+      <p>Document médical officiel · Service EMS</p>
+    </div>
+    <div class="form-id">
+      <div>RÉF: <strong id="refId">EMS-XXXX</strong></div>
+      <div id="currentDate">--/--/----</div>
+    </div>
+  </div>
+
+  <form id="reportForm">
+    <div class="form-body">
+
+      <!-- SECTION 1 : IDENTITÉ -->
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[01]</span>IDENTIFICATION
+        </h2>
+        <div class="field-grid">
+          <div class="field">
+            <label>Nom du patient</label>
+            <input type="text" name="patient_nom" required placeholder="Nom et prénom">
+          </div>
+          <div class="field">
+            <label>Âge / Sexe</label>
+            <input type="text" name="patient_age" required placeholder="Ex: 34 ans / H">
+          </div>
+          <div class="field">
+            <label>EMS intervenant</label>
+            <input type="text" name="ems_nom" required placeholder="Votre nom RP">
+          </div>
+          <div class="field">
+            <label>Matricule / Grade</label>
+            <input type="text" name="ems_matricule" required placeholder="Ex: EMS-042 / Médecin">
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2 : CIRCONSTANCES -->
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[02]</span>CIRCONSTANCES DE L'ACCIDENT
+        </h2>
+        <div class="field-grid">
+          <div class="field field-full">
+            <label>Description de l'intervention</label>
+            <textarea name="circonstances" required placeholder="Lieu, contexte, événements ayant mené à l'intervention..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3 : DIAGNOSTIC -->
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[03]</span>DIAGNOSTIC & BLESSURES
+        </h2>
+        <div class="field-grid">
+          <div class="field field-full">
+            <label>Blessures constatées</label>
+            <textarea name="diagnostic" required placeholder="Nature et localisation des blessures, état général..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4 : SOINS -->
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[04]</span>SOINS PRODIGUÉS
+        </h2>
+        <div class="field-grid">
+          <div class="field field-full">
+            <label>Actes médicaux effectués</label>
+            <textarea name="soins" required placeholder="Premiers secours, gestes effectués sur place..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5 : TRAITEMENT -->
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[05]</span>TRAITEMENT & RÉCUPÉRATION
+        </h2>
+        <div class="field-grid">
+          <div class="field field-full">
+            <label>Traitement prescrit</label>
+            <textarea name="traitement" required placeholder="Médicaments, posologies, suivi médical..."></textarea>
+          </div>
+          <div class="field">
+            <label>Temps de convalescence estimé</label>
+            <input type="text" name="convalescence" required placeholder="Ex: 3 jours / 1 semaine">
+          </div>
+          <div class="field">
+            <label>État de sortie</label>
+            <select name="etat_sortie" required>
+              <option value="">— Sélectionner —</option>
+              <option>Stable - Rentré chez lui</option>
+              <option>Hospitalisé</option>
+              <option>Transféré au Pillbox</option>
+              <option>En soins intensifs</option>
+              <option>Décédé sur place</option>
+              <option>Refus de soins</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6 : OBSERVATIONS -->
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[06]</span>OBSERVATIONS & CONSEILS
+        </h2>
+        <div class="field-grid">
+          <div class="field field-full">
+            <label>Recommandations au patient</label>
+            <textarea name="observations" required placeholder="Conseils, restrictions, suivi recommandé..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7 : FACTURATION -->
+      <div class="section">
+        <h2 class="section-title">
+          <span class="section-number">[07]</span>FACTURATION
+        </h2>
+        <div class="field-grid">
+          <div class="field">
+            <label>Montant total ($)</label>
+            <input type="number" name="montant" required min="0" step="1" placeholder="0">
+          </div>
+          <div class="field">
+            <label>Mode de paiement</label>
+            <select name="paiement" required>
+              <option value="">— Sélectionner —</option>
+              <option>Carte bancaire</option>
+              <option>Espèces</option>
+              <option>Assurance santé</option>
+              <option>Facturé à l'État</option>
+              <option>Impayé / À recouvrer</option>
+            </select>
+          </div>
+          <div class="field field-full">
+            <label>Détail de la facture (optionnel)</label>
+            <textarea name="detail_facture" placeholder="Détail des prestations facturées..."></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="submit-zone">
+      <div class="submit-info">
+        › Ce rapport sera transmis automatiquement au registre EMS et archivé.
+      </div>
+      <button type="submit" class="submit-btn" id="submitBtn">› TRANSMETTRE</button>
+    </div>
+  </form>
+
+  <div class="footer-meta">
+    <span>EMS // INTERNAL DOCUMENT</span>
+    <span>v1.0 · CONFIDENTIEL</span>
+  </div>
+</div>
+
+<!-- ============ OVERLAY STATUS ============ -->
+<div class="status-overlay" id="statusOverlay">
+  <div class="status-box">
+    <div class="status-icon" id="statusIcon">✓</div>
+    <div class="status-title" id="statusTitle">RAPPORT TRANSMIS</div>
+    <div class="status-text" id="statusText">Votre rapport a bien été enregistré au registre EMS.</div>
+    <button class="status-btn" onclick="closeStatus()">› FERMER</button>
+  </div>
+</div>
+
+<script>
+  // ============================================
+  //   CONFIGURATION — À MODIFIER PAR L'ADMIN
+  // ============================================
+  const CONFIG = {
+    // Code d'accès EMS (à partager en interne sur Discord privé)
+    // Tu peux le changer quand tu veux, et même mettre plusieurs codes valides
+    ACCESS_CODES: ['EMS2026', 'AMBULANCE'],
+
+    // URL du webhook Discord (créé dans : Paramètres salon > Intégrations > Webhooks)
+    WEBHOOK_URL: 'https://discord.com/api/webhooks/1508748771557642321/L_Oxal_8MPPqwXC21kM7Upd5ZASDvduSG7vc-Ck525UlrN9BFvyURG9ouzYiCol0n6E4',
+
+    // Nom du serveur RP (apparaît dans l'embed)
+    SERVER_NAME: 'Los Santos RP',
+  };
+  // ============================================
+
+  // --- Génération ID rapport + date ---
+  function generateRefId() {
+    const num = Math.floor(1000 + Math.random() * 9000);
+    return 'EMS-' + num;
+  }
+  function formatDate(date) {
+    const pad = n => String(n).padStart(2, '0');
+    return `${pad(date.getDate())}/${pad(date.getMonth()+1)}/${date.getFullYear()} · ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+  }
+
+  // --- Système d'accès ---
+  function checkAccess() {
+    const input = document.getElementById('accessCode').value.trim().toUpperCase();
+    const errorEl = document.getElementById('accessError');
+
+    if (CONFIG.ACCESS_CODES.map(c => c.toUpperCase()).includes(input)) {
+      // Mémorise l'accès pour la session
+      sessionStorage.setItem('ems_authed', '1');
+      showForm();
+    } else {
+      errorEl.textContent = '✗ CODE INVALIDE — ACCÈS REFUSÉ';
+      document.getElementById('accessCode').value = '';
+      setTimeout(() => errorEl.textContent = '', 3000);
+    }
+  }
+
+  function showForm() {
+    document.getElementById('loginContainer').style.display = 'none';
+    document.getElementById('formScreen').classList.add('active');
+    document.getElementById('refId').textContent = generateRefId();
+    document.getElementById('currentDate').textContent = formatDate(new Date());
+  }
+
+  // Vérifie si déjà authentifié dans cette session
+  if (sessionStorage.getItem('ems_authed') === '1') {
+    showForm();
+  }
+
+  // Entrée = valider
+  document.getElementById('accessCode').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') checkAccess();
+  });
+
+  // --- Envoi du rapport au webhook Discord ---
+  document.getElementById('reportForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.textContent = '› TRANSMISSION...';
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+    const refId = document.getElementById('refId').textContent;
+    const dateStr = document.getElementById('currentDate').textContent;
+
+    // Construction de l'embed Discord (mise en forme propre)
+    const embed = {
+      title: `🚑 RAPPORT MÉDICAL — ${refId}`,
+      color: 0xC8102E, // Rouge EMS
+      description: `**Service EMS · ${CONFIG.SERVER_NAME}**\n*Document confidentiel — Usage interne*`,
+      fields: [
+        {
+          name: '👤 PATIENT',
+          value: `**Nom :** ${data.patient_nom}\n**Âge / Sexe :** ${data.patient_age}`,
+          inline: true,
+        },
+        {
+          name: '🏥 INTERVENANT',
+          value: `**EMS :** ${data.ems_nom}\n**Matricule :** ${data.ems_matricule}`,
+          inline: true,
+        },
+        {
+          name: '\u200b', value: '\u200b', inline: false, // espacement
+        },
+        {
+          name: '📍 [01] CIRCONSTANCES',
+          value: data.circonstances.substring(0, 1024),
+          inline: false,
+        },
+        {
+          name: '🩹 [02] DIAGNOSTIC',
+          value: data.diagnostic.substring(0, 1024),
+          inline: false,
+        },
+        {
+          name: '💉 [03] SOINS PRODIGUÉS',
+          value: data.soins.substring(0, 1024),
+          inline: false,
+        },
+        {
+          name: '💊 [04] TRAITEMENT',
+          value: data.traitement.substring(0, 1024),
+          inline: false,
+        },
+        {
+          name: '⏱️ CONVALESCENCE',
+          value: data.convalescence,
+          inline: true,
+        },
+        {
+          name: '📋 ÉTAT DE SORTIE',
+          value: data.etat_sortie,
+          inline: true,
+        },
+        {
+          name: '\u200b', value: '\u200b', inline: false,
+        },
+        {
+          name: '📝 [05] OBSERVATIONS & CONSEILS',
+          value: data.observations.substring(0, 1024),
+          inline: false,
+        },
+        {
+          name: '💰 FACTURATION',
+          value: `**Montant :** $${data.montant}\n**Paiement :** ${data.paiement}${data.detail_facture ? '\n**Détail :** ' + data.detail_facture.substring(0, 800) : ''}`,
+          inline: false,
+        },
+      ],
+      footer: {
+        text: `EMS Internal Report · ${dateStr}`,
+      },
+      timestamp: new Date().toISOString(),
+    };
+
+    try {
+      const response = await fetch(CONFIG.WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: 'Registre EMS',
+          embeds: [embed],
+        }),
+      });
+
+      if (response.ok || response.status === 204) {
+        showStatus(true);
+        e.target.reset();
+        // Régénère un nouveau numéro pour le prochain rapport
+        document.getElementById('refId').textContent = generateRefId();
+        document.getElementById('currentDate').textContent = formatDate(new Date());
+      } else {
+        throw new Error('HTTP ' + response.status);
+      }
+    } catch (err) {
+      console.error('Erreur webhook:', err);
+      showStatus(false, err.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '› TRANSMETTRE';
+    }
+  });
+
+  // --- Affichage du statut (succès / erreur) ---
+  function showStatus(success, errorMsg = '') {
+    const overlay = document.getElementById('statusOverlay');
+    const icon = document.getElementById('statusIcon');
+    const title = document.getElementById('statusTitle');
+    const text = document.getElementById('statusText');
+
+    if (success) {
+      icon.textContent = '✓';
+      icon.className = 'status-icon success-icon';
+      title.textContent = 'RAPPORT TRANSMIS';
+      text.textContent = 'Le rapport a bien été enregistré et transmis au registre EMS Discord.';
+    } else {
+      icon.textContent = '✗';
+      icon.className = 'status-icon error-icon';
+      title.textContent = 'ÉCHEC TRANSMISSION';
+      text.textContent = 'Impossible de transmettre le rapport. Vérifie ta connexion ou contacte un admin. (' + errorMsg + ')';
+    }
+    overlay.classList.add('show');
+  }
+
+  function closeStatus() {
+    document.getElementById('statusOverlay').classList.remove('show');
+  }
+</script>
+
+</body>
+</html>
